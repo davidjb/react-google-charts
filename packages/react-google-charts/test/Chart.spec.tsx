@@ -15,6 +15,31 @@ describe("<Chart />", () => {
     expect(getByText("Loading Chart")).toBeVisible();
   });
 
+  it("should render errorElement", async () => {
+    const { getByText } = render(
+      <Chart
+        chartType="AreaChart"
+        chartLoaderScriptUrl="http://0.0.0.0/invalid-errorElement.js"
+        errorElement={<div>Don't Panic</div>} />,
+    );
+
+    await waitFor(() => expect(getByText("Don't Panic")).toBeVisible());
+  });
+
+  it("should render loader then errorElement", async () => {
+    const { getByText } = render(
+      <Chart
+        chartType="AreaChart"
+        chartLoaderScriptUrl="http://0.0.0.0/invalid-loader-errorElement.js"
+        loader={<div>Loading Chart</div>}
+        errorElement={<div>Don't Panic</div>} />,
+    );
+
+    expect(getByText("Loading Chart")).toBeVisible();
+
+    await waitFor(() => expect(getByText("Don't Panic")).toBeVisible());
+  });
+
   it("should draw chart", async () => {
     const { getByTestId } = render(
       <Chart
