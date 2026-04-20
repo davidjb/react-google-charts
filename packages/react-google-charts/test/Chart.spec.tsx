@@ -16,18 +16,19 @@ describe("<Chart />", () => {
   });
 
   it("should render errorElement", async () => {
-    const { getByText } = render(
+    const { findByText } = render(
       <Chart
         chartType="AreaChart"
         chartLoaderScriptUrl="http://0.0.0.0/invalid-errorElement.js"
         errorElement={<div>Don't Panic</div>} />,
     );
 
-    await waitFor(() => expect(getByText("Don't Panic")).toBeVisible());
+    expect(await findByText("Don't Panic")).toBeVisible();
+
   });
 
   it("should render loader then errorElement", async () => {
-    const { getByText } = render(
+    const { getByText, queryByText, findByText } = render(
       <Chart
         chartType="AreaChart"
         chartLoaderScriptUrl="http://0.0.0.0/invalid-loader-errorElement.js"
@@ -36,8 +37,10 @@ describe("<Chart />", () => {
     );
 
     expect(getByText("Loading Chart")).toBeVisible();
+    expect(queryByText("Don't Panic")).toBeNull();
 
-    await waitFor(() => expect(getByText("Don't Panic")).toBeVisible());
+    expect(await findByText("Don't Panic")).toBeVisible();
+    expect(queryByText("Loading Chart")).toBeNull();
   });
 
   it("should draw chart", async () => {
